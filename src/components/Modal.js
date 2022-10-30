@@ -1,5 +1,72 @@
+import { Link, Navigate } from "react-router-dom"
+
+import { useState, useEffect } from 'react'
+
+
 
 function Modal(props) {
+
+
+
+    const { pedido } = props
+
+    const [formData, setFormData] = useState(pedido)
+    function actualizarPedido (){
+        /* fetch */
+        return true 
+    }
+
+    function submit(e) {
+        e.preventDefault()
+        
+
+        if (validarFormulario(e)) {
+          const result = actualizarPedido()
+
+        }
+    }
+
+
+
+    function validarFormulario(e) {
+        let errores = 0
+    
+            console.log(e.target[0]);
+
+
+
+        for (let i = 0; i < 4; i++) {
+
+            if (e.target[i].value == '' || e.target[i].value == 0) {
+
+
+                e.target[i].parentNode.lastChild.classList.remove('noShow')
+                e.target[i].parentNode.lastChild.innerText = 'No puede estar vacio'
+
+                errores++
+
+            } else {
+                e.target[i].parentNode.lastChild.classList.add('noShow')
+                e.target[i].parentNode.lastChild.innerText = 'No puede estar vacio'
+
+
+            }
+
+        }
+
+
+        if (errores === 0) {
+
+            return true
+        } else {
+            return false
+        }
+
+
+    }
+
+
+
     return (
 
         <div className="modal fade" id={props.target} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -7,41 +74,50 @@ function Modal(props) {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title" id="exampleModalLabel">{props.titulo}</h5>
-                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={click}>
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div className="modal-body">
 
 
-                        <form>
+                        <form onSubmit={submit}>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputFecha">Fecha</label>
-                                    <input type="date" className="form-control" id="inputFecha"  onBlur={lectura} onClick={lectura}/>
-                                    <p className="error noShow"></p>
+                                    <input type="date" className="form-control" id="inputFecha" onBlur={lectura} onClick={lectura} value={formData?.fecha?.split('/').join('-')} onChange={(e) => { setFormData({ ...formData, fecha: e.target.value }) }} />
+
+                                    <p className="invalido noShow" ></p>
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputValor">Valor pedido</label>
-                                    <input type="number" className="form-control" id="inputValor" placeholder="valor del pedido $" />
+                                    <input type="number" className="form-control" id="inputValor" placeholder="ingrese valor del pedido" value={formData?.valor} onChange={(e) => { setFormData({ ...formData, valor: e.target.value }) }} />
+                                    <p className="invalido noShow"></p>
                                 </div>
                             </div>
                             <div className="form-row">
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputNumero">Numero de pedido</label>
-                                    <input type="number" className="form-control" id="inputNumero" placeholder="numero del pedido" />
+                                    <input type="number" className="form-control" id="inputNumero" placeholder="ingrese el numero" value={formData?.numero} onChange={(e) => { setFormData({ ...formData, numero: e.target.value }) }} />
+                                    <p className="invalido noShow"></p>
                                 </div>
                                 <div className="form-group col-md-6">
                                     <label htmlFor="inputState">State</label>
-                                    <select id="inputState" className="form-control">
-                                        <option defaultValue>Escoje una opcion</option>
-                                        <option>...</option>
+                                    <select id="inputState" className="form-control" defaultValue={formData?.estado || 0} onChange={(e) => { setFormData({ ...formData, estado: e.target.value }) }}>
+                                        <option value={0}>Escoje una opcion</option>
+
+                                        <option value="pendiente" >Pendiente</option>
+                                        <option value='proceso' >Proceso</option>
+                                        <option value='despachado' >Despachado</option>
+
                                     </select>
+                                    <p className="invalido noShow"></p>
                                 </div>
                             </div>
                             <div className="modal-footer">
-                                <button type="reset" className="btn btn-secondary" data-dismiss="modal" onClick={resetear}>cerrar</button>
-                                <button type="submit" className="btn btn-primary" onClick={validarFormulario}>Guardar</button>
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={click}>cerrar</button>
+                                <button type="submit" className="btn btn-primary">Guardar</button>
+
                             </div>
                         </form>
 
@@ -57,65 +133,31 @@ function Modal(props) {
 }
 
 export default Modal
+function click() {
+    window.location.reload()
+    /* let boton =  document.querySelector('#reseteador')
+    boton.click() */
 
+}
 function resetear(e) {
-    
-    let form =  document.querySelector('.modal-body form')
-    let fecha = document.querySelector('#inputFecha')
-    fecha.click()
-    form.reset()
+
+    // let form =  document.querySelector('.modal-body form')
+    // let fecha = document.querySelector('#inputFecha')
+    // fecha.click()
+    // form.reset()
+
+    console.log(e)
 }
 
 
-function validarFormulario(e){
-    let valueFecha = ""
-    
-    let fecha = document.querySelector('#inputFecha')
-    
-    let valor = document.querySelector('#inputValor')
-    let numero = document.querySelector('#inputNumero')
-    let state = document.querySelector('#inputState')
 
-    // console.log(e,fecha,valor,numero,state);
-    
-    /* fecha.addEventListener('click', (e) =>{
-        
-        valueFecha = e.target.value
-        console.log(valueFecha , e)
-    }) */
-
-    console.log(e.target.form[0].value)
-    console.log(e.target.form[1].value)
-    console.log(e.target.form[2].value)
-    console.log(e.target.form[3].value)
-
-
-    for (let i = 0; i < 4; i++) {
-       
-        if (e.target.form[i].value == '' || e.target.form[i].value == 'Escoje una opcion') {
-            
-
-            /* e.target.form[i].parentNode.lastChild.classlist.remove('noShow') */
-            e.target.form[i].parentNode.lastChild.innerText = 'No puede estar vacio'
-
-
-            console.log('entro' , e.target.form[i].parentNode)
-            e.preventDefault()
-        }
-        
-    }
-
-
-    
-    
-
-}
 
 function lectura(e) {
-    
+
     let valor = e.target.value
-    
+
     e.target.setAttribute('value', valor)
 
-    
+
 }
+

@@ -1,8 +1,50 @@
 import PedidoLista from "./PedidoLista"
 import Modal from "./Modal"
+import {useState, useEffect} from "react";
+
+let varPedidos = [{
+  id: 1,
+  fecha: '2022/10/21',
+  numero:'1234',
+  valor:'15000',
+  estado:'despachado'
+},
+{
+  id: 2,
+  fecha: '2022/10/21',
+  numero:'1234',
+  valor:'12000',
+  estado:'despachado'
+},
+{
+  id: 3,
+  fecha: '2022/10/21',
+  numero:'1234',
+  valor:'11000',
+  estado:'pendiente'
+},
+{
+  id: 4,
+  fecha: '2022/10/21',
+  numero:'1234',
+  valor:'11000',
+  estado:'proceso'
+}]
 
 
 function Home() {
+  const [pedidos, setPedidos] = useState([])
+
+
+
+  useEffect(()=>{
+    setPedidos(varPedidos)
+   
+  },[])
+
+  
+  
+
     return(
         <div className='Home'>
 
@@ -29,11 +71,22 @@ function Home() {
                 </tr>
               </thead>
               <tbody>
-                <PedidoLista id={1}/> 
-                <PedidoLista id={2}/> 
-                <PedidoLista id={3}/> 
-                <PedidoLista id={4}/> 
-                <PedidoLista id={5}/>                
+                
+                {
+                  pedidos.map((pedido,i) =>
+                    <PedidoLista 
+                    key={i}
+                    id={pedido.id}
+                    fecha={pedido.fecha}
+                    numero={pedido.numero}
+                    valor={pedido.valor}
+                    estado={pedido.estado}
+                    />
+                  )
+                  
+                }
+                 
+                                
                 
                 
               </tbody>
@@ -44,5 +97,7 @@ function Home() {
       </div>
     )
 }
+
+
 
 export default Home 
